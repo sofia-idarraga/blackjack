@@ -1,3 +1,8 @@
+const readline = require("readline");
+const prompt = require("prompt-sync")();
+
+let answer = "";
+
 class Card {
   constructor(pip, value) {
     this.pip = pip;
@@ -34,18 +39,18 @@ let card13 = new Card("K", 11);
 let card14 = new Card("A", 11);
 
 let cards = [
-  card1,
-  card2,
-  card3,
-  card4,
-  card5,
-  card6,
-  card7,
-  card8,
-  card9,
-  card10,
-  card11,
-  card12,
+  //  card1,
+  // card2,
+  // card3,
+  // card4,
+  // card5,
+  //  card6,
+  //  card7,
+  //  card8,
+  //  card9,
+  //  card10,
+  //  card11,
+  //card12,
   card13,
   card14,
 ];
@@ -53,25 +58,41 @@ let cards = [
 const suits = ["♠", "♥", "♣", "♦"];
 
 //To get inputs
-const readline = require("readline").createInterface({
+const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-function selectCard(selectedCards) {
+const randomCard = () => {
   const cardId = Math.floor(Math.random() * cards.length);
   const suitId = Math.floor(Math.random() * suits.length);
   let card = cards[cardId];
   card.addSuit(suits[suitId]);
+  return card;
+};
 
+const selectCard = (selectedCards) => {
+  let card = randomCard();
   selectedCards.forEach((element) => {
-    if (element === card) {
-      selectCard(selectedCards);
+    while (element.pip === card.pip && element.suit === card.suit) {
+      card = randomCard();
     }
   });
-
   return card;
-}
+};
+
+const isA = (card) => {
+  if (card.pip === "A") {
+    let input = prompt("Your A's value is 11 or 1? (11/1): ");
+    let entrance = Number(input);
+    while (entrance != 1 && entrance != 11) {
+      input = prompt("Your entrance is not valid, please write it again: ");
+      entrance = Number(input);
+    }
+    card.setValue(entrance);
+    console.log(card);
+  }
+};
 
 function startGame() {
   let selectedCards = [];
@@ -79,10 +100,14 @@ function startGame() {
   //Math.random() - 0 - cards.length
 
   const firstCard = selectCard(selectedCards);
-  const secondCard = selectCard(selectedCards);
+  isA(firstCard);
+  selectedCards.push(firstCard);
+  console.log(selectedCards);
 
-  console.log(firstCard);
-  console.log(secondCard);
+  const secondCard = selectCard(selectedCards);
+  isA(secondCard);
+  selectedCards.push(secondCard);
+  console.log(selectedCards);
 }
 
 startGame();
