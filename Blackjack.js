@@ -44,15 +44,15 @@ let cards = [
   // card3,
   // card4,
   // card5,
-  //  card6,
+  //card6,
   //  card7,
   //  card8,
   //  card9,
-  //  card10,
+  card10,
   //  card11,
   //card12,
   card13,
-  card14,
+  //card14,
 ];
 
 const suits = ["♠", "♥", "♣", "♦"];
@@ -94,10 +94,19 @@ const isA = (card) => {
   }
 };
 
+function checkWin(sum) {
+  if (sum >= 18 && sum <= 21) {
+    console.log("You win! ");
+    return 1000;
+  }
+  console.log("You lose! ");
+  return 0;
+}
+
 function startGame() {
+  let sum = 0;
+  let gain = 0;
   let selectedCards = [];
-  //TO DO: Add the first 2 cards randomly to the user
-  //Math.random() - 0 - cards.length
 
   const firstCard = selectCard(selectedCards);
   isA(firstCard);
@@ -108,6 +117,11 @@ function startGame() {
   isA(secondCard);
   selectedCards.push(secondCard);
   console.log(selectedCards);
+
+  sum = firstCard.value + secondCard.value;
+  console.log("Your sum is: " + sum);
+  gain += checkWin(sum);
+  console.log("You gain: " + gain);
 }
 
 startGame();
