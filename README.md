@@ -2,7 +2,6 @@
 
 **_By: Sofía Idárraga_**
 
-_In Progress_
 
 ---
 
