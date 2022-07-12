@@ -47,7 +47,7 @@ let cards = [
   //card6,
   //  card7,
   //  card8,
-  //  card9,
+  //card9,
   card10,
   //  card11,
   //card12,
@@ -97,10 +97,21 @@ const isA = (card) => {
 function checkWin(sum) {
   if (sum >= 18 && sum <= 21) {
     console.log("You win! ");
-    return 1000;
+    return true;
   }
   console.log("You lose! ");
+  return false;
+}
+
+function checkSum(win) {
+  if (win) {
+    return 1000;
+  }
   return 0;
+}
+
+function secondRound() {
+  console.log("SECOND ROUND!!. ");
 }
 
 function startGame() {
@@ -120,8 +131,21 @@ function startGame() {
 
   sum = firstCard.value + secondCard.value;
   console.log("Your sum is: " + sum);
-  gain += checkWin(sum);
+  let win = checkWin(sum);
+  gain += checkSum(win);
   console.log("You gain: " + gain);
+
+  if (win) {
+    let input = prompt("Do you wanna continue playing?: (Y/N)");
+    while (input != "Y" && input != "N") {
+      console.log("Invalid input. ");
+      input = prompt("Do you wanna continue playing?: (Y/N)");
+    }
+    if (input === "Y") {
+      secondRound();
+    }
+  }
+  console.log("See ya next time ;)");
 }
 
 startGame();
