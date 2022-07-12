@@ -1,7 +1,5 @@
 const prompt = require("prompt-sync")();
 
-let answer = "";
-
 class Card {
   constructor(pip, value) {
     this.pip = pip;
@@ -22,6 +20,29 @@ class Card {
   }
 }
 
+class Game {
+  constructor(sum, gain, playerCards) {
+    this.sum = sum;
+    this.gain = gain;
+    this.playerCards = playerCards;
+  }
+
+  checkWin() {
+    if (this.sum >= 18 && this.sum <= 21) {
+      console.log("You win! ");
+      return true;
+    }
+    console.log("You lose! ");
+    return false;
+  }
+
+  checkSum(win) {
+    if (win) {
+      this.gain += 1000;
+    }
+  }
+}
+
 let card1 = new Card("1", 1);
 let card2 = new Card("2", 2);
 let card3 = new Card("3", 3);
@@ -38,12 +59,12 @@ let card13 = new Card("K", 11);
 let card14 = new Card("A", 11);
 
 const cards = [
-  //card1,
-  // card2,
-  // card3,
-  //card4,
-  //card5,
-  //card6,
+  card1,
+  card2,
+  card3,
+  card4,
+  card5,
+  card6,
   card7,
   card8,
   card9,
@@ -86,44 +107,28 @@ const isA = (card) => {
   }
 };
 
-function checkWin(sum) {
-  if (sum >= 18 && sum <= 21) {
-    console.log("You win! ");
-    return true;
-  }
-  console.log("You lose! ");
-  return false;
-}
-
-function checkSum(win) {
-  if (win) {
-    return 1000;
-  }
-  return 0;
-}
-
-function nextRound(gain, playerCards) {
+function nextRound(game) {
   console.log("____________________________");
 
   console.log("NEXT ROUND!!. ");
-  console.log(playerCards);
-  const firstCard2 = selectCard(playerCards);
+  console.log(game.playerCards);
+  const firstCard2 = selectCard(game.playerCards);
   isA(firstCard2);
-  playerCards.push(firstCard2);
-  console.log(playerCards);
+  game.playerCards.push(firstCard2);
+  console.log(game.playerCards);
   console.log("____________________________");
 
-  const secondCard2 = selectCard(playerCards);
+  const secondCard2 = selectCard(game.playerCards);
   isA(secondCard2);
-  playerCards.push(secondCard2);
-  console.log(playerCards);
+  game.playerCards.push(secondCard2);
+  console.log(game.playerCards);
   console.log("____________________________");
 
-  sum = firstCard2.value + secondCard2.value;
-  console.log("Your sum is: " + sum);
-  let win = checkWin(sum);
-  gain += checkSum(win);
-  console.log("You gain: " + gain);
+  game.sum = firstCard2.value + secondCard2.value;
+  console.log("Your sum is: " + game.sum);
+  let win = game.checkWin();
+  game.checkSum(win);
+  console.log("You gain: " + game.gain);
   return win;
 }
 
@@ -131,33 +136,40 @@ function startGame() {
   let sum = 0;
   let gain = 0;
   const playerCards = [];
+  const game = new Game(sum, gain, playerCards);
 
-  const firstCard = selectCard(playerCards);
+  const firstCard = selectCard(game.playerCards);
   isA(firstCard);
-  playerCards.push(firstCard);
-  console.log(playerCards);
+  game.playerCards.push(firstCard);
+  console.log(game);
   console.log("____________________________");
 
-  const secondCard = selectCard(playerCards);
+  const secondCard = selectCard(game.playerCards);
   isA(secondCard);
-  playerCards.push(secondCard);
-  console.log(playerCards);
+  game.playerCards.push(secondCard);
+  console.log(game.playerCards);
   console.log("____________________________");
 
-  sum = firstCard.value + secondCard.value;
-  console.log("Your sum is: " + sum);
-  let win = checkWin(sum);
-  gain += checkSum(win);
-  console.log("You gain: " + gain);
+  game.sum = firstCard.value + secondCard.value;
+  console.log("Your sum is: " + game.sum);
+  let win = game.checkWin();
+  game.checkSum(win);
+  console.log("You gain: " + game.gain);
 
   while (win) {
-    let input = prompt("Do you wanna continue playing?: (Y/N)");
+    let input = prompt("Do you wanna continue playing?: (Y/N) ");
     while (input.toUpperCase() != "Y" && input.toUpperCase() != "N") {
       console.log("Invalid input. ");
-      input = prompt("Do you wanna continue playing?: (Y/N): ");
+      input = prompt("Do you wanna continue playing?: (Y/N) ");
     }
     if (input.toUpperCase() === "Y") {
-      win = nextRound(gain, playerCards);
+      win = nextRound(game);
+    }
+    if (input.toUpperCase() === "N") {
+      console.log("____________________________");
+
+      console.log("See ya next time ;)");
+      return;
     }
   }
 
@@ -165,7 +177,5 @@ function startGame() {
 
   console.log("See ya next time ;)");
 }
-
-function continuePlaying(win) {}
 
 startGame();
