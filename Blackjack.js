@@ -1,4 +1,3 @@
-const readline = require("readline");
 const prompt = require("prompt-sync")();
 
 let answer = "";
@@ -38,16 +37,16 @@ let card12 = new Card("Q", 11);
 let card13 = new Card("K", 11);
 let card14 = new Card("A", 11);
 
-let cards = [
-  //  card1,
+const cards = [
+  //card1,
   // card2,
   // card3,
-  // card4,
-  // card5,
-  //card6,
-  //  card7,
-  //  card8,
-  //card9,
+  card4,
+  card5,
+  card6,
+  card7,
+  card8,
+  card9,
   card10,
   //  card11,
   //card12,
@@ -57,29 +56,22 @@ let cards = [
 
 const suits = ["♠", "♥", "♣", "♦"];
 
-//To get inputs
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
 const randomCard = () => {
-  const cardId = Math.floor(Math.random() * cards.length);
-  const suitId = Math.floor(Math.random() * suits.length);
+  let cardId = Math.floor(Math.random() * cards.length);
+  let suitId = Math.floor(Math.random() * suits.length);
   let card = cards[cardId];
-  card.addSuit(suits[suitId]);
+  let suit = suits[suitId];
+  card.addSuit(suit);
   return card;
 };
 
-const selectCard = (selectedCards) => {
-  let card = randomCard();
-  selectedCards.forEach((element) => {
-    while (element.pip === card.pip && element.suit === card.suit) {
-      card = randomCard();
-    }
-  });
-  return card;
-};
+function selectCard(selectedCards) {
+  let newcard = randomCard();
+  while (selectedCards.includes(newcard)) {
+    newcard = randomCard();
+  }
+  return newcard;
+}
 
 const isA = (card) => {
   if (card.pip === "A") {
@@ -110,24 +102,40 @@ function checkSum(win) {
   return 0;
 }
 
-function secondRound() {
+function secondRound(gain, playerCards) {
   console.log("SECOND ROUND!!. ");
+  console.log(playerCards);
+  const firstCard2 = selectCard(playerCards);
+  isA(firstCard2);
+  playerCards.push(firstCard2);
+  console.log(playerCards);
+
+  const secondCard2 = selectCard(playerCards);
+  isA(secondCard2);
+  playerCards.push(secondCard2);
+  console.log(playerCards);
+
+  sum = firstCard2.value + secondCard2.value;
+  console.log("Your sum is: " + sum);
+  let win = checkWin(sum);
+  gain += checkSum(win);
+  console.log("You gain: " + gain);
 }
 
 function startGame() {
   let sum = 0;
   let gain = 0;
-  let selectedCards = [];
+  const playerCards = [];
 
-  const firstCard = selectCard(selectedCards);
+  const firstCard = selectCard(playerCards);
   isA(firstCard);
-  selectedCards.push(firstCard);
-  console.log(selectedCards);
+  playerCards.push(firstCard);
+  console.log(playerCards);
 
-  const secondCard = selectCard(selectedCards);
+  const secondCard = selectCard(playerCards);
   isA(secondCard);
-  selectedCards.push(secondCard);
-  console.log(selectedCards);
+  playerCards.push(secondCard);
+  console.log(playerCards);
 
   sum = firstCard.value + secondCard.value;
   console.log("Your sum is: " + sum);
@@ -142,7 +150,7 @@ function startGame() {
       input = prompt("Do you wanna continue playing?: (Y/N)");
     }
     if (input === "Y") {
-      secondRound();
+      secondRound(gain, playerCards);
     }
   }
   console.log("See ya next time ;)");
